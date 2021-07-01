@@ -17,11 +17,7 @@ import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.setValue
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -52,29 +48,25 @@ class MainActivity : AppCompatActivity() {
         var text by mutableStateOf("hello")
         setContent {
 
-            Column {
-                if (show){
-                    Text(text = "Android Compose")
-                }
-                Text(text = text)
-                Button(onClick = {
-                    show = true
-                    text = "compose"
-                }) {
+//            Column {
+//                if (show){
+//                    Text(text = "Android Compose")
+//                }
+//                Text(text = text)
+//                Button(onClick = {
+//                    show = true
+//                    text = "compose"
+//                }) {
+//
+//                }
+//
+//            }
 
-                }
-
-            }
-
-//            test1()
+//            Test()
+//            Test1()
 //            TestComposeScope()
 
-            ComposeTutorialTheme {
-                // A surface container using the 'background' color from the theme
-                Surface(color = MaterialTheme.colors.background) {
-//                    NewStory()
-                }
-            }
+            TestList()
 
         }
 
@@ -82,21 +74,54 @@ class MainActivity : AppCompatActivity() {
     }
 
 
+
+
+
+
+
     @Composable
-    fun test1() {
+    fun Test() {
+        Column {
+            var name by mutableStateOf("hello")
+            Text(text = name)
+            Log.d(TAG, "test")
+            Button(onClick = { name = "compose" }) {
+//                Text(text = name)
+            }
+        }
+
+    }
+
+
+    @Composable
+    fun Test1() {
 
         var name by remember {
             mutableStateOf("hello")
         }
 //        Text(text = name)
 
-        Log.d(TAG, "1111111")
+        Log.d(TAG, "111111")
         Column {
+
+            Log.d(TAG, "222222")
+
             Button(onClick = {}) {
-                name = ""
+//                name = ""
+//                Text(text = name, Modifier.padding())
+                Log.d(TAG, "333333")
             }
-            wrapper {
-                Text(text = name, Modifier.padding())
+
+            Box {
+                Log.d(TAG, "444444")
+            }
+
+            Text(text = name, Modifier.padding())
+
+            Wrapper {
+//                Text(text = name, Modifier.padding())
+                Log.d(TAG, "66666")
+
             }
 
         }
@@ -104,20 +129,20 @@ class MainActivity : AppCompatActivity() {
         lifecycleScope.launch {
             delay(2000)
             name = "" + System.currentTimeMillis()
-            Log.d(TAG, "2222222")
+            Log.d(TAG, "000000")
 //            name = "chenqiao"
 
         }
     }
 
     @Composable
-    fun TestComposeScope(){
+    fun TestComposeScope() {
 
-        var show by mutableStateOf(false)
+        var show by remember { mutableStateOf(false) }
 
         var text by mutableStateOf("hello")
         Column {
-            if (show){
+            if (show) {
                 Text(text = "Android Compose")
             }
             Text(text = text)
@@ -127,7 +152,7 @@ class MainActivity : AppCompatActivity() {
             }) {
 
             }
-            
+
         }
 
 
@@ -168,8 +193,34 @@ class MainActivity : AppCompatActivity() {
     }
 
     @Composable
-    fun wrapper(block: @Composable () -> Unit) {
+    fun Wrapper(block: @Composable () -> Unit) {
         block()
+    }
+
+
+    @Composable
+    fun TestList(){
+
+        Column {
+            var count by remember { mutableStateOf(mutableListOf(1, 2, 3)) }
+            Button(onClick = {
+
+                count.add(count.last() + 1)
+
+//                count = count.toMutableList().apply {
+//                    add(count.last() + 1)
+//                }
+                Log.d(TAG, "last value : ${count.last()}")
+            }){
+                Text("add")
+            }
+
+            for (i in count) {
+                Text(text = "$i")
+            }
+        }
+
+
     }
 
 }
