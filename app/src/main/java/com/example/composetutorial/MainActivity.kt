@@ -22,8 +22,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.imageResource
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -41,46 +43,43 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-
-        var hello by mutableStateOf("aaa")
-        var show by mutableStateOf(false)
-
-        var text by mutableStateOf("hello")
         setContent {
 
-//            Column {
-//                if (show){
-//                    Text(text = "Android Compose")
-//                }
-//                Text(text = text)
-//                Button(onClick = {
-//                    show = true
-//                    text = "compose"
-//                }) {
-//
-//                }
-//
-//            }
+            var name by remember {
+                mutableStateOf("Classin")
+            }
 
-//            Test()
-//            Test1()
-//            TestComposeScope()
+            Column {
+                Log.d(TAG, "111111")
+                Text("hello, $name")
+                Wrapper {
+                    Text("hello, $name")
+                    Log.d(TAG, "22222")
+                }
+                Log.d(TAG, "33333")
 
-            TestList()
+                lifecycleScope.launch {
+                    delay(2000)
+                    name = "Android ${System.currentTimeMillis()}"
+                }
+            }
 
         }
+
+
 
 
     }
 
 
 
-
-
+    suspend fun suspengFunction(){
+        delay(1000)
+    }
 
 
     @Composable
-    fun Test() {
+    fun Test1(){
         Column {
             var name by mutableStateOf("hello")
             Text(text = name)
@@ -89,12 +88,43 @@ class MainActivity : AppCompatActivity() {
 //                Text(text = name)
             }
         }
+    }
+
+
+
+    @Composable
+    fun Test2() {
+
+        var name by remember {
+            mutableStateOf("Classin")
+        }
+
+        var show by mutableStateOf(false)
+
+        Column {
+            Text("hello, $name")
+            Log.d(TAG, "111111")
+
+            if (show){
+                Image(painter = painterResource(id = R.drawable.ic_launcher_background), contentDescription = "")
+                Log.d(TAG, "2222")
+            }
+
+            Button(onClick = {
+                name = "Android"
+                show = !show
+            }) {
+                Text(text = "变")
+                Log.d(TAG, "333")
+
+            }
+        }
 
     }
 
 
     @Composable
-    fun Test1() {
+    fun Test3() {
 
         var name by remember {
             mutableStateOf("hello")
@@ -165,7 +195,6 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-    @Preview
     @Composable
     fun TestModifier() {
 
