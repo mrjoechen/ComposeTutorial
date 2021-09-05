@@ -17,7 +17,11 @@ import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -49,25 +53,26 @@ class MainActivity : AppCompatActivity() {
                 mutableStateOf("Classin")
             }
 
-            Column {
-                Log.d(TAG, "111111")
-                Text("hello, $name")
-                Wrapper {
-                    Text("hello, $name")
-                    Log.d(TAG, "22222")
-                }
-                Log.d(TAG, "33333")
+//            Column {
+//                Log.d(TAG, "111111")
+//                Text("hello, $name")
+//                Wrapper {
+//                    Text("hello, $name")
+//                    Log.d(TAG, "22222")
+//                }
+//                Log.d(TAG, "33333")
+//
+//                lifecycleScope.launch {
+//                    delay(2000)
+//                    name = "Android ${System.currentTimeMillis()}"
+//                }
+//            }
 
-                lifecycleScope.launch {
-                    delay(2000)
-                    name = "Android ${System.currentTimeMillis()}"
-                }
-            }
+//            Test3()
+//            TestComposeScope()
+            ChangeRef()
 
         }
-
-
-
 
     }
 
@@ -81,7 +86,9 @@ class MainActivity : AppCompatActivity() {
     @Composable
     fun Test1(){
         Column {
-            var name by mutableStateOf("hello")
+            var name by remember {
+                mutableStateOf("hello")
+            }
             Text(text = name)
             Log.d(TAG, "test")
             Button(onClick = { name = "compose" }) {
@@ -149,8 +156,11 @@ class MainActivity : AppCompatActivity() {
             Text(text = name, Modifier.padding())
 
             Wrapper {
-//                Text(text = name, Modifier.padding())
-                Log.d(TAG, "66666")
+                Wrapper {
+                    Text(text = name, Modifier.padding())
+                    Log.d(TAG, "66666")
+                }
+
 
             }
 
@@ -182,9 +192,7 @@ class MainActivity : AppCompatActivity() {
             }) {
 
             }
-
         }
-
 
         lifecycleScope.launch {
             delay(3000)
@@ -248,8 +256,39 @@ class MainActivity : AppCompatActivity() {
                 Text(text = "$i")
             }
         }
+    }
 
 
+    var user = User("haha")
+
+    @Composable
+    fun ChangeRef(){
+
+        var text by  remember {
+            mutableStateOf("123")
+        }
+
+        Column{
+
+            Text(text)
+            Button(onClick = {
+                // text 改变引发的 recompose 导致 TestUser 重复调用，TestUser 方法是否会重复执行取决于 val/var
+                val currentTimeMillis = System.currentTimeMillis()
+                text = ""+currentTimeMillis
+                user = User("haha")
+            }) {
+                Text(text = "changeUser")
+            }
+            TestUser(user)
+        }
+
+    }
+
+
+    @Composable
+    fun TestUser(user: User){
+        Text(user.name)
+        Log.d(TAG, "user.name : ${user.name}")
     }
 
 }
