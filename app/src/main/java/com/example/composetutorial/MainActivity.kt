@@ -17,11 +17,7 @@ import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -41,16 +37,15 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 
-const val TAG = "MainActivity"
+const val TAG = "MainActivity test"
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         setContent {
-
-            var name by remember {
-                mutableStateOf("Classin")
+            var name  by remember {
+                mutableStateOf("ClassIn")
             }
 
 //            Column {
@@ -68,17 +63,34 @@ class MainActivity : AppCompatActivity() {
 //                }
 //            }
 
-//            Test3()
-//            TestComposeScope()
-            ChangeRef()
+            Column {
+                Log.i(TAG, "0000")
+                Text(name)
+                Log.i(TAG, "1111")
+                Button(onClick = {}) {
+                    Text(text = "123")
+                    Log.i(TAG, "222")
+                }
 
+                Log.i(TAG, "333")
+                Button(onClick = {
+                    name = "ClassIn" + System.currentTimeMillis()
+                }) {
+                    Text(text = "Change")
+                }
+            }
         }
 
     }
 
 
 
-    suspend fun suspengFunction(){
+    @Composable
+    fun ComposeTest(block: @Composable () -> Unit){
+        block.invoke()
+    }
+
+    suspend fun suspendFunction(a: Int){
         delay(1000)
     }
 
@@ -208,6 +220,8 @@ class MainActivity : AppCompatActivity() {
 
         Text(text = "hello", modifier = Modifier
             .clickable {
+                Log.d(TAG, "000000")
+
                 Toast
                     .makeText(this@MainActivity, "000", Toast.LENGTH_SHORT)
                     .show()
@@ -215,6 +229,8 @@ class MainActivity : AppCompatActivity() {
             .padding(15.dp)
             .background(Color.Red)
             .clickable {
+                Log.d(TAG, "11111")
+
                 Toast
                     .makeText(this@MainActivity, "111", Toast.LENGTH_SHORT)
                     .show()
@@ -222,6 +238,8 @@ class MainActivity : AppCompatActivity() {
             .padding(10.dp)
             .background(Color.Blue)
             .clickable {
+                Log.d(TAG, "22222")
+
                 Toast
                     .makeText(this@MainActivity, "222", Toast.LENGTH_SHORT)
                     .show()
@@ -239,10 +257,12 @@ class MainActivity : AppCompatActivity() {
     fun TestList(){
 
         Column {
-            var count by remember { mutableStateOf(mutableListOf(1, 2, 3)) }
+//            var count by remember { mutableStateOf(mutableListOf(1, 2, 3)) }
+            var count = remember { mutableStateListOf(1, 2, 3) }
+
             Button(onClick = {
 
-                count.add(count.last() + 1)
+//                count.add(count.last() + 1)
 
 //                count = count.toMutableList().apply {
 //                    add(count.last() + 1)
@@ -289,6 +309,21 @@ class MainActivity : AppCompatActivity() {
     fun TestUser(user: User){
         Text(user.name)
         Log.d(TAG, "user.name : ${user.name}")
+    }
+
+
+    @Composable
+    fun Foo() {
+        var text by remember { mutableStateOf("a") }
+        Log.d(TAG, "Foo")
+        Button(onClick = {
+            text = "$text $text"
+        }.also { Log.d(TAG, "Button") }) {
+            Log.d(TAG, "Button content lambda")
+            Wrapper {
+                Text(text).also { Log.d(TAG, "Text") }
+            }
+        }
     }
 
 }
